@@ -1,0 +1,20 @@
+* Steam.el
+
+  Use the power of emacs and org-mode to sort and search your Steam
+  library. Also includes functionality to launch games from Emacs.
+
+** Installation
+
+   Add steam.el to your load-path. Add the following to your init-file:
+
+   #+begin_src emacs-lisp
+     (require 'steam)
+     (setq steam-username "Username") ;; Replace Username with your steam username
+   #+end_src
+
+** Usage
+
+   - To launch a game: =M-x steam-launch=
+   - To insert your game list in org format: =M-x steam-insert-org=
+   - To update your game list (if you've installed new games without
+     restarting Emacs): =M-x steam-get-games=
