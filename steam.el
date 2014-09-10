@@ -42,7 +42,7 @@
   (unless steam-games (steam-get-games))
   (mapcar (lambda (game)
             (insert 
-             (format "* [[elisp:(steam-launch-id %s][%s]]\n  http://steamcommunity.com/app/%s\n"
+             (format "* [[elisp:(steam-launch-id %s)][%s]]\n  http://steamcommunity.com/app/%s\n"
                      (cdr game) (car game) (cdr game))))
   steam-games))
 
