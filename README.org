@@ -1,7 +1,9 @@
 * Steam.el
 
   Use the power of emacs and org-mode to sort and search your Steam
-  library. Also includes functionality to launch games from Emacs.
+  library. Also includes functionality to launch Steam games from Emacs.
+
+  [[file:screenshot.png]]
 
 ** Installation
 
@@ -15,6 +17,16 @@
 ** Usage
 
    - To launch a game: =M-x steam-launch=
-   - To insert your game list in org format: =M-x steam-insert-org=
+   - To insert your game list in org-mode format: =M-x steam-insert-org-text=
+   - Download logotypes for your games, and insert them into org-mode: =M-x steam-insert-org-images=
    - To update your game list (if you've installed new games without
      restarting Emacs): =M-x steam-get-games=
+     
+   In org-mode, you can click links in order to run your games. This
+   will bring up a pop-up, asking if it is safe to run the lisp-code.
+   If this annoys you, put this line at the top of your .org-file: 
+   =#-*- org-confirm-elisp-link-function: nil; -*-=
+
+   If you insert the logotype images into org-mode, make sure to turn
+   on =org-display-inline-images=. You can also put
+   =#+STARTUP:inlineimages= at the top of your .org-file.
