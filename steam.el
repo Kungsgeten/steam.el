@@ -8,7 +8,7 @@
 
 (defvar steam-games nil "An XML file of the user's games on Steam.")
 (defvar steam-username nil "The Steam username")
-(defvar steam-logo-dir "steamlogos" "The dir where logos will be downloaded")
+(defvar steam-logo-dir "steamlogos" "The dir where logos will be downloaded, relative to the org-file.")
 
 (defun steam-get-xml ()
   "Downloads the user's games as XML"
@@ -96,7 +96,7 @@ already existing in the buffer will not be duplicated."
 (defun steam-download-logo (game)
   "Downloads the logo image of a game into `steam-logo-dir' folder."
   (let ((link (steam-game-attribute game 'logo))
-        (filename (expand-file-name (concat "img" (steam-game-attribute game 'appID) ".jpg") steam-logo-dir)))
+        (filename (concat steam-logo-dir "/img" (steam-game-attribute game 'appID) ".jpg")))
     (unless (file-exists-p filename)
       (url-retrieve
        link
