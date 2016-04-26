@@ -24,9 +24,15 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (defvar url-http-codes)
+  (defvar url-http-end-of-headers))
+
 (require 'url)
 (require 'xml)
 (require 'cl-lib)
+
+(declare-function org-current-level "org")
 
 (defvar steam-games nil "An XML file of the user's games on Steam.")
 (defvar steam-username nil "The Steam username.")
