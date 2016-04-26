@@ -7,7 +7,7 @@
 ;; URL: http://github.com/Kungsgeten/steam.el
 ;; Version: 1.00
 ;; Keywords: games
-;; Package-Requires: ()
+;; Package-Requires: ((cl-lib "0.5"))
 
 ;;; Commentary:
 
@@ -24,9 +24,15 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (defvar url-http-codes)
+  (defvar url-http-end-of-headers))
+
 (require 'url)
 (require 'xml)
-(require 'cl)
+(require 'cl-lib)
+
+(declare-function org-current-level "org")
 
 (defvar steam-games nil "An XML file of the user's games on Steam.")
 (defvar steam-username nil "The Steam username.")
@@ -43,7 +49,7 @@
 
 (defun steam-game-attribute (game attribute)
   "Read an XML attribute from a game."
-  (caddar (xml-get-children game attribute)))
+  (cl-caddar (xml-get-children game attribute)))
 
 (defun steam-get-games ()
   "Download steam games as XML and update `steam-games'."
@@ -52,7 +58,7 @@
 
 (defun steam-launch-id (id)
   "Launch game with ID in Steam client."
-  (case system-type
+  (cl-case system-type
     ('windows-nt (shell-command (format "explorer steam://rungameid/%s" id)))
     ('gnu/linux (shell-command (format "steam steam://rungameid/%s" id)))
     ('darwin (shell-command (format "open steam://rungameid/%s" id)))))
@@ -81,7 +87,7 @@ Entries already existing in the buffer will not be duplicated."
   (unless steam-games (steam-get-games))
   (let ((org-lvl (org-current-level)))
     (mapc (lambda (game)
-            (unless (search
+            (unless (cl-search
                      (format "elisp:(steam-launch-id %s)"
                              (steam-game-attribute game 'appID))
                      (buffer-string))
@@ -103,7 +109,7 @@ Entries already existing in the buffer will not be duplicated."
     (make-directory steam-logo-dir))
   (let ((org-lvl (org-current-level)))
     (mapc (lambda (game)
-            (unless  (search
+            (unless  (cl-search
                       (format "elisp:(steam-launch-id %s)"
                               (steam-game-attribute game 'appID))
                       (buffer-string))
