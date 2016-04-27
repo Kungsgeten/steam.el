@@ -1,4 +1,4 @@
-;;; steam.el --- Organize and launch Steam games from Emacs
+;;; steam.el --- Organize and launch Steam games
 
 ;; Copyright (C) 2015-- Erik Sjöstrand
 ;; MIT License
@@ -42,7 +42,7 @@
   "Downloads the user's games as XML."
   (with-current-buffer
       (url-retrieve-synchronously (format "http://steamcommunity.com/id/%s/games?tab=all&xml=1"
-                                          steam-username))
+                                          (url-hexify-string steam-username)))
     (goto-char url-http-end-of-headers)
     (car (xml-get-children (car (xml-parse-region (point) (point-max)))
                            'games))))
@@ -56,13 +56,19 @@
   (interactive)
   (setq steam-games (xml-get-children (steam-get-xml) 'game)))
 
+(shell-quote-argument
+ "explorer steam://rungameid/13")
+
 (defun steam-launch-id (id)
   "Launch game with ID in Steam client."
-  (cl-case system-type
-    ('windows-nt (shell-command (format "explorer steam://rungameid/%s" id)))
-    ('gnu/linux (shell-command (format "steam steam://rungameid/%s" id)))
-    ('darwin (shell-command (format "open steam://rungameid/%s" id)))))
+  (shell-command
+   (concat (cl-case system-type
+             ('windows-nt "explorer ")
+             ('gnu/linux "steam ")
+             ('darwin "open "))
+           (shell-quote-argument (format "steam://rungameid/%s" id)))))
 
+;;;###autoload
 (defun steam-launch ()
   "Launch a game in your Steam library."
   (interactive)
@@ -72,13 +78,11 @@
                    (cons (steam-game-attribute game 'name)
                          (steam-game-attribute game 'appID)))
                  steam-games))
-         (game (cdr (assoc
-                     (completing-read
-                      "Game: " 
-                      games)
-                     games))))
+         (game (cdr (assoc (completing-read "Game: " games)
+                           games))))
     (when game (steam-launch-id game))))
 
+;;;###autoload
 (defun steam-insert-org-text ()
   "Insert each Steam game as an org heading.
 The heading contains the game's name and a link to execute the game.
@@ -99,6 +103,7 @@ Entries already existing in the buffer will not be duplicated."
                               (steam-game-attribute game 'name)))))
           steam-games)))
 
+;;;###autoload
 (defun steam-insert-org-images ()
   "Insert each Steam game as an org heading.
 The heading contains an image of the game's logo and a link to execute the game.
@@ -109,10 +114,10 @@ Entries already existing in the buffer will not be duplicated."
     (make-directory steam-logo-dir))
   (let ((org-lvl (org-current-level)))
     (mapc (lambda (game)
-            (unless  (cl-search
-                      (format "elisp:(steam-launch-id %s)"
-                              (steam-game-attribute game 'appID))
-                      (buffer-string))
+            (unless (cl-search
+                     (format "elisp:(steam-launch-id %s)"
+                             (steam-game-attribute game 'appID))
+                     (buffer-string))
               (insert "*")
               (when org-lvl (dotimes (number org-lvl)
                               (insert "*")))
