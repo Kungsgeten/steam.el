@@ -1,20 +1,19 @@
-* Steam.el
+#+TITLE:Steam.el [[http://melpa.org/#/steam][file:http://melpa.org/packages/steam-badge.svg]]
 
   Use the power of emacs and org-mode to sort and search your Steam
   library. Also includes functionality to launch Steam games from Emacs.
 
   [[file:screenshot.png]]
 
-** Installation
+* Installation
 
-   Add steam.el to your load-path. Add the following to your init-file:
+   The easiest way is to install =steam.el= from MELPA. Then add the following to your init-file:
 
    #+begin_src emacs-lisp
-     (require 'steam)
-     (setq steam-username "Username") ;; Replace Username with your steam username
+   (setq steam-username "Username") ;; Replace Username with your steam username
    #+end_src
 
-** Usage
+* Usage
 
    - To launch a game: =M-x steam-launch=
    - To insert your game list in org-mode format: =M-x steam-insert-org-text=
