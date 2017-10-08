@@ -83,25 +83,33 @@
     (when game (steam-launch-id game))))
 
 ;;;###autoload
+(defun steam-insert-org (link-format-func desc-format-func)
+  (unless steam-games (steam-get-games))
+  (let ((new-games
+         (cl-mapcan (lambda (game)
+                      (let ((org-link-action
+                             (format "elisp:(steam-launch-id %s)"
+                                     (steam-game-attribute game 'appID))))
+                        (unless (save-excursion
+                                  (goto-char (point-min))
+                                  (search-forward org-link-action nil t))
+                          (list (format "%s [[%s][%s]]%s\n"
+                                        (make-string (1+ (org-current-level)) ?*)
+                                        org-link-action
+                                        (funcall link-format-func game)
+                                        (funcall desc-format-func game))))))
+                    steam-games)))
+    (insert (apply #'concat new-games))))
+
+;;;###autoload
 (defun steam-insert-org-text ()
   "Insert each Steam game as an org heading.
 The heading contains the game's name and a link to execute the game.
 Entries already existing in the buffer will not be duplicated."
   (interactive)
-  (unless steam-games (steam-get-games))
-  (let ((org-lvl (org-current-level)))
-    (mapc (lambda (game)
-            (unless (cl-search
-                     (format "elisp:(steam-launch-id %s)"
-                             (steam-game-attribute game 'appID))
-                     (buffer-string))
-              (insert "*")
-              (when org-lvl (dotimes (number org-lvl)
-                              (insert "*")))
-              (insert (format " [[elisp:(steam-launch-id %s)][%s]]\n"
-                              (steam-game-attribute game 'appID)
-                              (steam-game-attribute game 'name)))))
-          steam-games)))
+  (steam-insert-org
+   (lambda (game) (steam-game-attribute game 'name))
+   (lambda (game) "")))
 
 ;;;###autoload
 (defun steam-insert-org-images ()
@@ -109,23 +117,9 @@ Entries already existing in the buffer will not be duplicated."
 The heading contains an image of the game's logo and a link to execute the game.
 Entries already existing in the buffer will not be duplicated."
   (interactive)
-  (unless steam-games (steam-get-games))
-  (unless (file-exists-p steam-logo-dir)
-    (make-directory steam-logo-dir))
-  (let ((org-lvl (org-current-level)))
-    (mapc (lambda (game)
-            (unless (cl-search
-                     (format "elisp:(steam-launch-id %s)"
-                             (steam-game-attribute game 'appID))
-                     (buffer-string))
-              (insert "*")
-              (when org-lvl (dotimes (number org-lvl)
-                              (insert "*")))
-              (insert (format " [[elisp:(steam-launch-id %s)][file:%s]] %s\n"
-                              (steam-game-attribute game 'appID)
-                              (steam-download-logo game)
-                              (steam-game-attribute game 'name)))))
-          steam-games)))
+  (steam-insert-org
+   (lambda (game) (concat "file:" (steam-download-logo game)))
+   (lambda (game) (concat " " (steam-game-attribute game 'name)))))
 
 (defun steam-download-logo (game)
   "Download the logo image of GAME into `steam-logo-dir' folder."
