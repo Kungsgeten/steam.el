@@ -58,12 +58,13 @@
 
 (defun steam-launch-id (id)
   "Launch game with ID in Steam client."
-  (shell-command
-   (concat (cl-case system-type
-             ('windows-nt "explorer ")
-             ('gnu/linux "steam ")
-             ('darwin "open "))
-           (shell-quote-argument (format "steam://rungameid/%s" id)))))
+  (start-process "Steam"
+                 nil
+                 (cl-case system-type
+                   ('windows-nt "explorer")
+                   ('gnu/linux "steam")
+                   ('darwin "open"))
+                 (format "steam://rungameid/%s" id)))
 
 ;;;###autoload
 (defun steam-launch ()
