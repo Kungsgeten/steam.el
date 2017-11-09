@@ -155,5 +155,21 @@ Entries already existing in the buffer will not be duplicated."
       (sleep-for 0 100))
     filename))
 
+(defun steam-id-at-point ()
+  "Get steam game id of link at point, if any."
+  (or (when (org-in-regexp org-bracket-link-regexp 1)
+        (let ((link (match-string-no-properties 1)))
+          (when (string-match "elisp:(steam-launch-id \\([0-9]+\\))"
+                              link)
+            (match-string-no-properties 1 link))))
+      (error "No Steam link at point")))
+
+;;;###autoload
+(defun steam-browse-at-point ()
+  "Open the Steam store for the Steam org link at point."
+  (interactive)
+  (browse-url (concat "https://store.steampowered.com/app/"
+                      (steam-id-at-point))))
+
 (provide 'steam)
 ;;; steam.el ends here
