@@ -150,6 +150,8 @@ Entries already existing in the buffer will not be duplicated."
   (let ((link (steam-game-attribute game 'logo))
         (filename (concat steam-logo-dir "/img" (steam-game-attribute game 'appID) ".jpg")))
     (unless (file-exists-p filename)
+      ;; write-region throws an error if file is in a nonexistant directory
+      (unless (file-exists-p steam-logo-dir) (make-directory steam-logo-dir))
       (url-retrieve
        link
        (lambda (status filename buffer)
