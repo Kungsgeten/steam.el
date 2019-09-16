@@ -13,6 +13,8 @@
    (setq steam-username "Username") ;; Replace Username with your steam username
    #+end_src
 
+=steam.el= can not get a list of your games unless your Steam profile is public. Visit https://steamcommunity.com/id/username/edit/settings (where =username= is replaced with your Steam username). Set your profile to /Public/ and make sure that /Game details/ is set to /Public/.
+
 * Usage
 
    - To launch a game: =M-x steam-launch=
@@ -20,10 +22,10 @@
    - Download logotypes for your games, and insert them into org-mode: =M-x steam-insert-org-images=
    - To update your game list (if you've installed new games without
      restarting Emacs): =M-x steam-get-games=
-     
+
    In org-mode, you can click links in order to run your games. This
    will bring up a pop-up, asking if it is safe to run the lisp-code.
-   If this annoys you, put this line at the top of your .org-file: 
+   If this annoys you, put this line at the top of your .org-file:
    =#-*- org-confirm-elisp-link-function: nil; -*-=
 
    If you insert the logotype images into org-mode, make sure to turn
