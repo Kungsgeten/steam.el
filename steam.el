@@ -184,12 +184,27 @@ Entries already existing in the buffer will not be duplicated."
             (match-string-no-properties 1 link))))
       (error "No Steam link at point")))
 
+(defun steam-link-description ()
+  "Get description of steam.el link at point, if any."
+  (or (when (org-in-regexp org-bracket-link-regexp 1)
+        (match-string-no-properties 2))
+      (error "No Steam link at point")))
+
+(defun steam-to-heading-link ()
+  "Move point to link of current heading."
+  (unless (org-at-heading-p)
+    (org-previous-visible-heading 1))
+  (beginning-of-line)
+  (org-next-link))
+
 ;;;###autoload
 (defun steam-browse-at-point ()
   "Open the Steam store for the Steam org link at point."
   (interactive)
-  (browse-url (concat "https://store.steampowered.com/app/"
-                      (steam-id-at-point))))
+  (save-excursion
+    (steam-to-heading-link)
+    (browse-url (concat "https://store.steampowered.com/app/"
+                        (steam-id-at-point)))))
 
 (provide 'steam)
 ;;; steam.el ends here
