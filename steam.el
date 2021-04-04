@@ -41,29 +41,30 @@
 (defun steam-check-xml-response (xml)
   "Check XML from steam for errors, return an error message if an error was detected, else nil."
   (let ((error-node (xml-get-children xml 'error))
-	(games-node (xml-get-children xml 'games)))
+        (games-node (xml-get-children xml 'games)))
     (cond
      (error-node
       (format "Recieved response: '%s', are you sure your profile is public?"
-	       (car (last (car error-node)))))
-      ((not games-node) "Could not find games tag in response")
-      (t nil))))
+              (car (last (car error-node)))))
+     ((not games-node) "Could not find games tag in response")
+     (t nil))))
 
 (defun steam-get-xml ()
   "Downloads the user's games as XML."
   (with-current-buffer
       (url-retrieve-synchronously (format "http://steamcommunity.com/id/%s/games?tab=all&xml=1"
                                           (url-hexify-string steam-username)))
+    (set-buffer-multibyte t)
     (goto-char url-http-end-of-headers)
     (let*
-	((response (car (xml-parse-region (point) (point-max))))
-	 (error-detected (steam-check-xml-response response)))
+        ((response (car (xml-parse-region (point) (point-max))))
+         (error-detected (steam-check-xml-response response)))
       (if (not error-detected)
-	  (progn
-	    (message "Retrieved games successfully")
-	    (car (xml-get-children response 'games)))
-	(message error-detected)
-	nil))))
+          (progn
+            (message "Retrieved games successfully")
+            (car (xml-get-children response 'games)))
+        (message error-detected)
+        nil))))
 
 (defun steam-game-attribute (game attribute)
   "From GAME, read an XML ATTRIBUTE."
