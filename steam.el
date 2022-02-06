@@ -19,7 +19,7 @@
 ;; library into an org-mode file, in order to organize your games, and launch
 ;; them from there.  Run either `steam-insert-org-text' or
 ;; `steam-insert-org-images' (if you want the logotypes for the games in your
-;; org file). The logotypes will be saved locally (see variable `steam-logo-dir'
+;; org file).  The logotypes will be saved locally (see variable `steam-logo-dir'
 ;; into a folder relative to the org-file.
 
 ;;; Code:
