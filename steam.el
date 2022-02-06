@@ -40,7 +40,8 @@
 (defvar steam-logo-dir "steamlogos" "The dir where logos will be downloaded, relative to the org-file.")
 
 (defun steam-check-xml-response (xml)
-  "Check XML from steam for errors, return an error message if an error was detected, else nil."
+  "Check XML from steam for errors.
+Return an error message if an error was detected, else nil."
   (let ((error-node (xml-get-children xml 'error))
         (games-node (xml-get-children xml 'games)))
     (cond
