@@ -38,7 +38,9 @@
 (declare-function org-current-level "org")
 
 (defvar steam-games nil "An XML file of the user's games on Steam.")
-(defvar steam-username nil "The Steam username.")
+(defvar steam-username nil "The Steam username.
+It refers to the text in the CUSTOM URL field
+in your Steam account profile settings.")
 (defvar steam-logo-dir "steamlogos" "The dir where logos will be downloaded, relative to the org-file.")
 
 (defun steam-check-xml-response (xml)
