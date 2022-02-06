@@ -31,6 +31,7 @@
 (require 'url)
 (require 'xml)
 (require 'cl-lib)
+(require 'org)
 
 (declare-function org-current-level "org")
 
@@ -178,7 +179,7 @@ Entries already existing in the buffer will not be duplicated."
 
 (defun steam-id-at-point ()
   "Get steam game id of link at point, if any."
-  (or (when (org-in-regexp org-bracket-link-regexp 1)
+  (or (when (org-in-regexp org-link-bracket-re 1)
         (let ((link (match-string-no-properties 1)))
           (when (string-match "elisp:(steam-launch-id \\([0-9]+\\))"
                               link)
@@ -187,7 +188,7 @@ Entries already existing in the buffer will not be duplicated."
 
 (defun steam-link-description ()
   "Get description of steam.el link at point, if any."
-  (or (when (org-in-regexp org-bracket-link-regexp 1)
+  (or (when (org-in-regexp org-link-bracket-re 1)
         (match-string-no-properties 2))
       (error "No Steam link at point")))
 
