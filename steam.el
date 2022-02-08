@@ -15,11 +15,14 @@
 ;;
 ;; (setq steam-username "your_username")
 ;;
+;; Here `steam-username' refers to the text in the CUSTOM URL field
+;; in your Steam account profile settings.
+;;
 ;; Then use `steam-launch' to play a game! You can also insert your steam
 ;; library into an org-mode file, in order to organize your games, and launch
 ;; them from there.  Run either `steam-insert-org-text' or
 ;; `steam-insert-org-images' (if you want the logotypes for the games in your
-;; org file). The logotypes will be saved locally (see variable `steam-logo-dir'
+;; org file).  The logotypes will be saved locally (see variable `steam-logo-dir'
 ;; into a folder relative to the org-file.
 
 ;;; Code:
@@ -35,7 +38,9 @@
 (declare-function org-current-level "org")
 
 (defvar steam-games nil "An XML file of the user's games on Steam.")
-(defvar steam-username nil "The Steam username.")
+(defvar steam-username nil "The Steam username.
+It refers to the text in the CUSTOM URL field
+in your Steam account profile settings.")
 (defvar steam-logo-dir "steamlogos" "The dir where logos will be downloaded, relative to the org-file.")
 
 (defun steam-check-xml-response (xml)

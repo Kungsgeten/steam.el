@@ -15,6 +15,8 @@
 
 =steam.el= can not get a list of your games unless your Steam profile is public. Visit https://steamcommunity.com/id/username/edit/settings (where =username= is replaced with your Steam username). Set your profile to /Public/ and make sure that /Game details/ is set to /Public/.
 
+Here =steam-username= refers to the text in the =CUSTOM URL= field in your Steam account profile settings (you need to set one if there is nothing there).
+
 * Usage
 
    - To launch a game: =M-x steam-launch=
